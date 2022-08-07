@@ -130,7 +130,7 @@ struct TooltipModifier<TooltipContent: View>: ViewModifier {
     private var arrowView: some View {
         return ArrowShape()
             .rotation(Angle(radians: self.arrowRotation))
-            .stroke(self.config.borderColor)
+            .stroke(self.config.borderColor, lineWidth: self.config.borderWidth)
             .background(ArrowShape()
                 .offset(x: 0, y: 1)
                 .rotation(Angle(radians: self.arrowRotation))
@@ -196,15 +196,72 @@ struct TooltipModifier<TooltipContent: View>: ViewModifier {
 }
 
 struct Tooltip_Previews: PreviewProvider {
-    static var previews: some View {
+    static var previewTop: some View {
         var config = DefaultTooltipConfig(side: .top)
         config.backgroundColor = Color(red: 0.8, green: 0.9, blue: 1)
-        
-        
-        return VStack {
+
+        return VStack(spacing: 6) {
+            Text("Previous")
+
             Text("Say...").tooltip(config: config) {
                 Text("Something nice!")
             }
-        }.previewDevice(.init(stringLiteral: "iPhone 12 mini"))
+
+            Text("Next")
+        }
+    }
+
+    static var previewBottom: some View {
+        var config = DefaultTooltipConfig()
+        config.backgroundColor = Color(red: 0.8, green: 0.9, blue: 1)
+
+        return VStack(spacing: 6) {
+            Text("Previous")
+
+            Text("Say...").tooltip(config: config) {
+                Text("Something nice!")
+            }
+            .zIndex(1) // This just needs to be higher than the next view so the tooltip will be on top
+
+            Text("Next")
+        }
+    }
+
+    static var previewNoBorder: some View {
+        var config = DefaultTooltipConfig()
+        config.backgroundColor = Color(red: 0.8, green: 0.9, blue: 1)
+        config.borderWidth = 0
+        config.margin = 3
+
+        return VStack(spacing: 6) {
+            Text("Previous")
+
+            Text("Say...").tooltip(config: config) {
+                Text("Something nice!")
+            }
+            .zIndex(1) // This just needs to be higher than the next view so the tooltip will be on top
+
+            Text("Next")
+        }
+    }
+
+    static var previews: some View {
+        previewTop
+            .frame(width: 200, height: 200)
+            .fixedSize(horizontal: true, vertical: true)
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Top")
+
+        previewBottom
+            .frame(width: 200, height: 200)
+            .fixedSize(horizontal: true, vertical: true)
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Bottom")
+
+        previewNoBorder
+            .frame(width: 200, height: 200)
+            .fixedSize(horizontal: true, vertical: true)
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("No Border")
     }
 }
