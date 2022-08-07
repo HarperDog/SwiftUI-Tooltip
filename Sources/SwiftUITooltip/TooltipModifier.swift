@@ -130,7 +130,7 @@ struct TooltipModifier<TooltipContent: View>: ViewModifier {
     private var arrowView: some View {
         return ArrowShape()
             .rotation(Angle(radians: self.arrowRotation))
-            .stroke(self.config.borderColor)
+            .stroke(self.config.borderColor, lineWidth: self.config.borderWidth)
             .background(ArrowShape()
                 .offset(x: 0, y: 1)
                 .rotation(Angle(radians: self.arrowRotation))
